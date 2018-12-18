@@ -1,0 +1,9 @@
+name,link_id,link_key,speed_sensor_id,count_sensor_id,from_node_id,to_node_id,link_type_name,direction,length,number_of_lanes,speed_limit,lane_cap,link_type,jam_density,wave_speed,demand_type_code,mode_code,network_design_flag,grade,geometry,original_geometry,map_matching_orientation_code,map_matching_loop_code,additional_lanes_on_left_side,length_of_left_side_lanes,additional_lanes_on_right_side,length_of_right_side_lanes
+,1,,,,2,1,,,0.203,5,126,1800,,,,,,,,,,,,,,,
+,2,,,,1,4,,,0.203,5,126,1800,,,,,,,,,,,,,,,
+,3,,,,4,1,,,0.203,5,126,1800,,,,,,,,,,,,,,,
+,4,,,,1,2,,,0.203,5,126,1800,,,,,,,,,,,,,,,
+,5,,,,3,1,,,0.133,5,126,1800,,,,,,,,,,,,,,,
+,6,,,,1,5,,,0.133,5,126,1800,,,,,,,,,,,,,,,
+,7,,,,5,1,,,0.133,5,126,1800,,,,,,,,,,,,,,,
+,8,,,,1,3,,,0.133,5,126,1800,,,,,,,,,,,,,,,
