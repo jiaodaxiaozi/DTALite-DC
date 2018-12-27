@@ -7,7 +7,7 @@ Created on Wed Dec 19 12:44:27 2018
 
 
 units = 1   #1:km,km/h;2:mile,mph
-city = '海淀区,北京'
+city = 'haidian district, beijing'
 
 g_number_of_macro_nodes = 0
 g_number_of_macro_links = 0
