@@ -7,7 +7,7 @@ Created on Wed Dec 19 12:44:27 2018
 
 
 units = 1   #1:km,km/h;2:mile,mph
-city = 'Tempe, Arizona'
+city = '海淀区,北京'
 
 g_number_of_macro_nodes = 0
 g_number_of_macro_links = 0
@@ -18,7 +18,7 @@ g_macro_link_list = []
 
 
 class MacroNode:
-    def __init__(self,highway,osmid,ref,x,y,geometry):
+    def __init__(self,osmid,x,y):
         self.name = ''
         self.node_id = int(osmid)
         self.zone_id = ''
@@ -36,7 +36,7 @@ class MacroNode:
         g_number_of_macro_nodes += 1
 
 class MacroLink:
-    def __init__(self,access,bridge,geometry,highway,junction,key,lanes,length,maxspeed,name,oneway,osmid,ref,tunnel,u,v):
+    def __init__(self,geometry,lanes,length,maxspeed,name,oneway,osmid,u,v):
         self.name = name
         self.link_id = osmid
         self.link_key = ''
@@ -56,10 +56,16 @@ class MacroLink:
             
         if maxspeed != maxspeed:
             self.speed_limit = -1
-        elif isinstance(maxspeed,str):
-            self.speed_limit = float(maxspeed[:-4])*1.61 if units == 1 else float(maxspeed[:-4])
         else:
-            self.speed_limit = float(maxspeed[0][:-4])*1.61 if units == 1 else float(maxspeed[0][:-4])
+            speed_str = maxspeed if isinstance(maxspeed,str) else maxspeed[0]
+            if (units == 1) and ('mph' not in speed_str):
+                self.speed_limit = float(speed_str)
+            elif (units == 1) and ('mph' in speed_str):
+                self.speed_limit = float(speed_str[:-4])*1.61
+            elif (units == 2) and ('mph' not in speed_str):
+                self.speed_limit = float(speed_str)/1.61
+            else:
+                self.speed_limit = float(speed_str[:-4])
             
         self.lane_cap = ''
         self.link_type = ''
@@ -90,13 +96,24 @@ def GetNetwork():
     global link_attributes_list
     global g_macro_node_list
     global g_macro_link_list
+    
+    node_column_name = ['osmid','x','y']
+    link_column_name = ['geometry','lanes','length','maxspeed','name','oneway','osmid','u','v']
+    
     G = ox.graph_from_place(city, network_type='drive')
     #G_projected = ox.project_graph(G)
     #ox.plot_graph(G_projected)
     node_attributes_df = ox.graph_to_gdfs(G, edges=False)
     link_attributes_df = ox.graph_to_gdfs(G, nodes=False)
-    node_attributes_list = node_attributes_df.values.tolist()
-    link_attributes_list = link_attributes_df.values.tolist()
+    node_attributes_column_name = list(node_attributes_df.columns)
+    link_attributes_column_name = list(link_attributes_df.columns)
+    node_column_index = [node_attributes_column_name.index(el) for el in node_column_name]
+    link_column_index = [link_attributes_column_name.index(el) for el in link_column_name]
+    node_attributes_df_useful = node_attributes_df.iloc[:,node_column_index]
+    link_attributes_df_useful = link_attributes_df.iloc[:,link_column_index]
+    
+    node_attributes_list = node_attributes_df_useful.values.tolist()
+    link_attributes_list = link_attributes_df_useful.values.tolist()
     g_macro_node_list = [MacroNode(*el) for el in node_attributes_list]
     g_macro_link_list = [MacroLink(*el) for el in link_attributes_list]
 
